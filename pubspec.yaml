@@ -1,0 +1,35 @@
+name: better_aliyun_oss
+description: A Simple Aliyun OSS Upload for Flutter.
+version: 0.0.1
+homepage: https://github.com/WangYng
+repository: https://github.com/WangYng/better_aliyun_oss
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.20.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  path: any
+  http_parser: any
+  crypto: any
+  convert: any
+  dio: any
+  intl: any
+  better_file_md5_plugin: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# The following section is specific to Flutter.
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: io.github.wangyng.better_aliyun_oss
+        pluginClass: BetterAliyunOssPlugin
+      ios:
+        pluginClass: BetterAliyunOssPlugin
