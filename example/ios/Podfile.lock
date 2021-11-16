@@ -1,0 +1,34 @@
+PODS:
+  - better_aliyun_oss (0.0.1):
+    - Flutter
+  - better_file_md5_plugin (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+  - path_provider (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - better_aliyun_oss (from `.symlinks/plugins/better_aliyun_oss/ios`)
+  - better_file_md5_plugin (from `.symlinks/plugins/better_file_md5_plugin/ios`)
+  - Flutter (from `Flutter`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+
+EXTERNAL SOURCES:
+  better_aliyun_oss:
+    :path: ".symlinks/plugins/better_aliyun_oss/ios"
+  better_file_md5_plugin:
+    :path: ".symlinks/plugins/better_file_md5_plugin/ios"
+  Flutter:
+    :path: Flutter
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+
+SPEC CHECKSUMS:
+  better_aliyun_oss: b49bfbf584d3d49c94066632faba59f381aee9fa
+  better_file_md5_plugin: 408ea7e823f089f5655f26612676f9aaad306ba7
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+
+PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d
+
+COCOAPODS: 1.11.2

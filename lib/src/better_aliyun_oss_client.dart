@@ -114,8 +114,7 @@ class BetterAliyunOssClient {
 
           contentMD5 = fileMD5;
           contentLength = fileLength;
-          data = File(path).readAsBytes().asStream();
-          File(path).readAsBytes().asStream();
+          data = File(path).openRead();
         } else if (buffer != null) {
           // 获取buffer内容
           if (buffer.length <= 0) {
