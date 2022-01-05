@@ -18,7 +18,7 @@ class BetterAliyunOssSigner {
     final canonicalizedOSSHeaders = _buildCanonicalizedOSSHander(headers);
     final canonicalizedResource = _buildCanonicalizedResource(bucketName, objectName);
 
-    String contentMd5 = headers["content-md5"] ?? headers["Content-Md5"] ?? "";
+    String contentMd5 = headers["content-md5"] ?? headers["Content-MD5"] ?? headers["Content-Md5"] ?? "";
     String contentType = headers["content-type"] ?? headers["Content-Type"] ?? "";
     String date = headers["date"] ?? headers["Date"] ?? "";
 

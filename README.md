@@ -8,7 +8,7 @@ A Simple Aliyun OSS Upload for Flutter.
 
 ```yaml
 dependencies:
-  better_aliyun_oss: ^0.0.2
+  better_aliyun_oss: ^0.0.3
 ```
 
 2. Install it
@@ -38,18 +38,20 @@ $ flutter packages get
     final objectFileName = Uuid().v1().replaceAll("-", "") + path.extension(file.path);
     final objectPath = "image/${DateFormat("yyyyMM").format(DateTime.now())}/$objectFileName";
 
-    final requestTaskId = ossClient.putObject(
+    final simplePutRequest = ossClient.putObject(
       bucket: "my-bucket",
       endpoint: "oss-cn-hangzhou.aliyuncs.com",
-      domain: "https://mydomain.com",
+      domain: "https://domain.com",
       objectPath: objectPath,
       contentType: lookupMimeType(file.path) ?? "application/octet-stream",
       path: file.path,
     );
 
-    print("requestTaskId : $requestTaskId");
+    print("简单数据上传请求 id : ${simplePutRequest.requestTaskId}");
   }
 ```
 
 ## Feature
 - [x] simple upload file to Aliyun OSS.
+- [x] multipart upload file to Aliyun OSS.
+

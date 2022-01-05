@@ -1,6 +1,6 @@
 name: better_aliyun_oss
 description: A Simple Aliyun OSS Upload for Flutter.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/WangYng
 repository: https://github.com/WangYng/better_aliyun_oss
 
@@ -19,6 +19,8 @@ dependencies:
   dio: any
   intl: any
   better_file_md5_plugin: any
+  xml: any
+  tuple: any
 
 dev_dependencies:
   flutter_test:
