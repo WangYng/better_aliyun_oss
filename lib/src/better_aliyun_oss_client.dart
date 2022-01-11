@@ -61,6 +61,9 @@ class BetterAliyunOssClient {
   // 生成http请求签名
   BetterAliyunOssSigner? _signer;
 
+  // 打开日志
+  final bool enableLog;
+
   // 阿里云鉴权
   final Future<BetterAliyunOssCredentials?> Function() credentials;
 
@@ -75,7 +78,7 @@ class BetterAliyunOssClient {
 
   Stream<BetterAliyunOssClientEvent> get eventStream => _controller.stream;
 
-  BetterAliyunOssClient(this.credentials);
+  BetterAliyunOssClient(this.credentials, {this.enableLog = true});
 
   dispose() {
     _controller.close();
@@ -210,7 +213,7 @@ class BetterAliyunOssClient {
         headers["Authorization"] = authorization;
 
         // 开始上传
-        await BetterAliyunOssDioUtils.getInstance().put<void>(
+        await BetterAliyunOssDioUtils.getInstance(enableLog).put<void>(
           requestUrl,
           data: data,
           options: Options(headers: headers, responseType: ResponseType.plain),
@@ -310,7 +313,7 @@ class BetterAliyunOssClient {
       headers["Authorization"] = authorization;
 
       // 提交请求
-      final result = await BetterAliyunOssDioUtils.getInstance().post<String>(
+      final result = await BetterAliyunOssDioUtils.getInstance(enableLog).post<String>(
         requestUrl,
         data: data,
         options: Options(headers: headers, responseType: ResponseType.plain),
@@ -414,7 +417,7 @@ class BetterAliyunOssClient {
         headers["Authorization"] = authorization;
 
         // 开始上传
-        final result = await BetterAliyunOssDioUtils.getInstance().put<String>(
+        final result = await BetterAliyunOssDioUtils.getInstance(enableLog).put<String>(
           requestUrl,
           data: data,
           options: Options(headers: headers, responseType: ResponseType.plain),
@@ -428,7 +431,7 @@ class BetterAliyunOssClient {
         yield 0;
 
         final eTag = result.headers.map['ETag'];
-        if (eTag != null && eTag is List && eTag.length > 0) {
+        if (eTag != null && eTag.length > 0) {
           // 上传成功
           _controller.sink.add(BetterAliyunOssClientEvent(requestTaskId, BetterAliyunOssClientEventEnum.success, data: eTag.first.toString()));
         } else {
@@ -503,7 +506,7 @@ class BetterAliyunOssClient {
       headers["Authorization"] = authorization;
 
       // 提交请求
-      await BetterAliyunOssDioUtils.getInstance().post<void>(
+      await BetterAliyunOssDioUtils.getInstance(enableLog).post<void>(
         requestUrl,
         data: data,
         options: Options(headers: headers, responseType: ResponseType.plain),
@@ -519,7 +522,7 @@ class BetterAliyunOssClient {
       // 访问数据时的域名地址
       return Tuple2('$domain/${partList[0].objectPath}', null);
     } catch (e) {
-      final exception = BetterAliyunOssClientException(message: "上传失败");
+      final exception = BetterAliyunOssClientException(message: "上传失败 $e");
       return Tuple2(null, exception);
     }
   }

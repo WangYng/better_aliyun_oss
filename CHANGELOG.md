@@ -6,3 +6,6 @@ fix issue.
 
 ## 0.0.3
 multipart upload.
+
+## 0.0.4
+fix issue.
