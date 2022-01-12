@@ -424,8 +424,9 @@ class BetterAliyunOssClient {
           cancelToken: cancelToken,
           onSendProgress: (int count, int total) {
             // 上传进度
-            _controller.sink
-                .add(BetterAliyunOssClientEvent(requestTaskId, BetterAliyunOssClientEventEnum.progress, data: {"count": count, "total": total}));
+            if (count % 1024 == 0 || count == total)
+              _controller.sink
+                  .add(BetterAliyunOssClientEvent(requestTaskId, BetterAliyunOssClientEventEnum.progress, data: {"count": count, "total": total}));
           },
         );
         yield 0;
