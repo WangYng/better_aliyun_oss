@@ -12,3 +12,6 @@ fix issue.
 
 ## 0.0.5
 fix issue.
+
+## 0.0.6
+fix issue.

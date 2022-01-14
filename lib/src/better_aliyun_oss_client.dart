@@ -532,11 +532,11 @@ class BetterAliyunOssClient {
   ///
   /// request: 请求上传接口的返回值
   ///
-  void cancelPutObject(BetterAliyunOssClientRequest request) {
+  Future cancelPutObject(BetterAliyunOssClientRequest request) async {
     final requestSubscription = _requestSubscriptionMap[request.requestTaskId];
     if (requestSubscription != null) {
       // 结束上传流程
-      requestSubscription.cancel();
+      await requestSubscription.cancel();
       // 结束Dio上传
       request.cancelToken?.cancel();
       _requestSubscriptionMap.remove(request.requestTaskId);
