@@ -38,7 +38,7 @@ $ flutter packages get
     final objectFileName = Uuid().v1().replaceAll("-", "") + path.extension(file.path);
     final objectPath = "image/${DateFormat("yyyyMM").format(DateTime.now())}/$objectFileName";
 
-    final simplePutRequest = ossClient.putObject(
+    simplePutRequest = ossClient.putObject(
       bucket: "my-bucket",
       endpoint: "oss-cn-hangzhou.aliyuncs.com",
       domain: "https://domain.com",
@@ -48,6 +48,12 @@ $ flutter packages get
     );
 
     print("简单数据上传请求 id : ${simplePutRequest.requestTaskId}");
+  }
+  
+  void cancelSimpleUpload() {
+    if (simplePutRequest != null) {
+      ossClient.cancelPutObject(simplePutRequest!);
+    }
   }
 ```
 
