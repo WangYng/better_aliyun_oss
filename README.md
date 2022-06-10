@@ -33,15 +33,25 @@ $ flutter packages get
       print("$event");
     });
   }
+  
+  Future<BetterAliyunOssCredentials?> credentials() async {
+    final credentials = {
+      "SecurityToken": "",
+      "AccessKeyId": "",
+      "AccessKeySecret": "",
+      "Expiration": "",
+    };
+    return BetterAliyunOssCredentials.fromMap(credentials);
+  }
 
   void uploading() async {
     final objectFileName = Uuid().v1().replaceAll("-", "") + path.extension(file.path);
     final objectPath = "image/${DateFormat("yyyyMM").format(DateTime.now())}/$objectFileName";
 
     simplePutRequest = ossClient.putObject(
-      bucket: "my-bucket",
-      endpoint: "oss-cn-hangzhou.aliyuncs.com",
-      domain: "https://domain.com",
+      bucket: () async => "my-bucket",
+      endpoint: () async => "oss-cn-hangzhou.aliyuncs.com",
+      domain: () async => "https://domain.com",
       objectPath: objectPath,
       contentType: lookupMimeType(file.path) ?? "application/octet-stream",
       path: file.path,
