@@ -116,9 +116,9 @@ class _MyAppState extends State<MyApp> {
     final objectPath = "image/diary/${DateFormat("yyyyMM").format(DateTime.now())}/$objectFileName";
 
     simplePutRequest = ossClient.putObject(
-      bucket: "my-bucket",
-      endpoint: "oss-cn-hangzhou.aliyuncs.com",
-      domain: "https://domain.com",
+      bucket: () async => "my-bucket",
+      endpoint: () async => "oss-cn-hangzhou.aliyuncs.com",
+      domain: () async => "https://domain.com",
       objectPath: objectPath,
       contentType: lookupMimeType(file.path) ?? "application/octet-stream",
       buffer: bytes,
@@ -145,9 +145,9 @@ class _MyAppState extends State<MyApp> {
     final objectPath = "image/diary/${DateFormat("yyyyMM").format(DateTime.now())}/$objectFileName";
 
     final partListTuple = await ossClient.initiateMultipartUpload(
-      bucket: "my-bucket",
-      endpoint: "oss-cn-hangzhou.aliyuncs.com",
-      domain: "https://domain.com",
+      bucket: () async => "my-bucket",
+      endpoint: () async => "oss-cn-hangzhou.aliyuncs.com",
+      domain: () async => "https://domain.com",
       objectPath: objectPath,
       contentType: lookupMimeType(file.path) ?? "application/octet-stream",
       filePath: file.path,

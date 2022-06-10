@@ -8,7 +8,7 @@ A Simple Aliyun OSS Upload for Flutter.
 
 ```yaml
 dependencies:
-  better_aliyun_oss: ^0.0.6
+  better_aliyun_oss: ^0.0.7
 ```
 
 2. Install it

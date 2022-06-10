@@ -10,6 +10,7 @@ import 'package:better_aliyun_oss/src/better_aliyun_oss_signer.dart';
 import 'package:better_file_md5_plugin/better_file_md5_plugin.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:tuple/tuple.dart';
@@ -86,9 +87,9 @@ class BetterAliyunOssClient {
 
   /// 上传数据
   ///
-  /// bucket: 阿里云Bucket
-  /// endpoint: 阿里云Endpoint
-  /// domain: Oss服务器绑定的域名. 如果不填写默认为 https://$bucket.$endpoint
+  /// bucket: 阿里云Bucket，鉴权后获取相应的值
+  /// endpoint: 阿里云Endpoint，鉴权后获取相应的值
+  /// domain: Oss服务器绑定的域名，鉴权后获取相应的值。如果不填写默认为 https://$bucket.$endpoint
   /// objectPath: 阿里云服务器文件路径
   /// path: 待上传的文件路径: 比如相册中的图片
   /// buffer: 待上传的数据: 比如动态生成的图片
@@ -97,9 +98,9 @@ class BetterAliyunOssClient {
   /// return: 阿里上传请求，取消上传 和 监听上传事件时需要用到
   ///
   BetterAliyunOssClientRequest putObject({
-    required String bucket,
-    required String endpoint,
-    String? domain,
+    required AsyncValueGetter<String> bucket,
+    required AsyncValueGetter<String> endpoint,
+    AsyncValueGetter<String>? domain,
     required String objectPath,
     String? path,
     Uint8List? buffer,
@@ -180,15 +181,21 @@ class BetterAliyunOssClient {
           return;
         }
 
+        String bucketValue = await bucket();
+        String endpointValue = await endpoint();
+        String domainValue;
+
         if (domain == null) {
-          domain = "https://$bucket.$endpoint";
+          domainValue = "https://$bucketValue.$endpointValue";
+        } else {
+          domainValue = await domain();
         }
 
         // 上传的到阿里云的地址
-        final String requestUrl = 'https://$bucket.$endpoint/$objectPath';
+        final String requestUrl = 'https://$bucketValue.$endpointValue/$objectPath';
 
         // 访问数据时的域名地址
-        final String finallyUrl = '$domain/$objectPath';
+        final String finallyUrl = '$domainValue/$objectPath';
 
         // 请求时间
         final date = _requestTime();
@@ -199,14 +206,14 @@ class BetterAliyunOssClient {
           'Content-Length': contentLength.toString(),
           'Content-MD5': contentMD5,
           'Date': date,
-          'Host': "$bucket.$endpoint",
+          'Host': "$bucketValue.$endpointValue",
           "x-oss-security-token": _signer!.credentials.securityToken,
         };
 
         // 计算签名
         final authorization = _signer!.sign(
           httpMethod: 'PUT',
-          bucketName: bucket,
+          bucketName: bucketValue,
           objectName: objectPath,
           headers: headers,
         );
@@ -241,9 +248,9 @@ class BetterAliyunOssClient {
 
   /// 文件分片上传第一步：初始化一个分片上传事件
   ///
-  /// bucket: 阿里云Bucket
-  /// endpoint: 阿里云Endpoint
-  /// domain: Oss服务器绑定的域名. 如果不填写默认为 https://$bucket.$endpoint
+  /// bucket: 阿里云Bucket，鉴权后获取相应的值
+  /// endpoint: 阿里云Endpoint，鉴权后获取相应的值
+  /// domain: Oss服务器绑定的域名，鉴权后获取相应的值。如果不填写默认为 https://$bucket.$endpoint
   /// objectPath: 阿里云服务器文件路径
   /// path: 待上传的文件路径: 比如相册中的图片
   /// contentType: 文件类型. 常见的有: image/png image/jpeg audio/mp3 video/mp4 阿里云支持的上传文件类型 https://help.aliyun.com/document_detail/39522.html
@@ -251,9 +258,9 @@ class BetterAliyunOssClient {
   /// return: 文件分片列表
   ///
   Future<Tuple2<List<BetterAliyunOssPart>?, BetterAliyunOssClientException?>> initiateMultipartUpload({
-    required String bucket,
-    required String endpoint,
-    String? domain,
+    required AsyncValueGetter<String> bucket,
+    required AsyncValueGetter<String> endpoint,
+    AsyncValueGetter<String>? domain,
     required String objectPath,
     required String filePath,
     required String contentType,
@@ -287,10 +294,20 @@ class BetterAliyunOssClient {
         return Tuple2(null, exception);
       }
 
+      String bucketValue = await bucket();
+      String endpointValue = await endpoint();
+      String domainValue;
+
+      if (domain == null) {
+        domainValue = "https://$bucketValue.$endpointValue";
+      } else {
+        domainValue = await domain();
+      }
+
       Stream<List<int>> data = File(filePath).openRead();
 
       // 上传的到阿里云的地址
-      final String requestUrl = 'https://$bucket.$endpoint/$objectPath?uploads';
+      final String requestUrl = 'https://$bucketValue.$endpointValue/$objectPath?uploads';
 
       // 请求时间
       final date = _requestTime();
@@ -299,14 +316,14 @@ class BetterAliyunOssClient {
       Map<String, String> headers = {
         'Content-Type': contentType,
         'Date': date,
-        'Host': "$bucket.$endpoint",
+        'Host': "$bucketValue.$endpointValue",
         "x-oss-security-token": _signer!.credentials.securityToken,
       };
 
       // 计算签名
       final authorization = _signer!.sign(
         httpMethod: 'POST',
-        bucketName: bucket,
+        bucketName: bucketValue,
         objectName: "$objectPath?uploads",
         headers: headers,
       );
@@ -333,9 +350,9 @@ class BetterAliyunOssClient {
         final partRangeStart = i * partLength;
         if (partRangeStart < fileLength) {
           final ossPart = BetterAliyunOssPart.init(
-            bucket: bucket,
-            endpoint: endpoint,
-            domain: domain,
+            bucket: bucketValue,
+            endpoint: endpointValue,
+            domain: domainValue,
             objectPath: objectPath,
             filePath: filePath,
             uploadId: uploadId,
