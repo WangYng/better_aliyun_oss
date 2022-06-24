@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 
 class BetterAliyunOssDioUtils {
@@ -6,7 +5,7 @@ class BetterAliyunOssDioUtils {
 
   static Dio getInstance(bool enableLog) {
     if (_instance == null) {
-      _instance = Dio(BaseOptions(connectTimeout: 1000 * 30, receiveTimeout: 1000 * 30));
+      _instance = Dio(BaseOptions(connectTimeout: 1000 * 30, sendTimeout: 1000 * 30, receiveTimeout: 1000 * 30));
 
       if (enableLog) {
         _instance!.interceptors.add(LogInterceptor(request: true, responseBody: true));
